@@ -1,3 +1,4 @@
+version
 services:
   snileit:
     image: snipe/snipe-it:latest
@@ -5,13 +6,30 @@ services:
     # - 8000:80
     volumes:
       - snipeit-data:/var/lib/snipeit
-    links:
-      - snipedb:snipedb
-      - redis
+        #links:
+        #- snipedb:snipedb
+        #- redis
     network:
       - snipeit
       - proxy
+    depends_on:
+      - db
+    environments:
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
+      - LETSENCRYPT_HOST=${VIRTUAL_HOST}
+      - LETSENCRYPT_EMAI=${LETSENCRYPT_EMAI}
+      - MYSQL_PORT_3306_TCP_ADDR=db
+      - MYSQL_PORT_3306_TCP_PORT=3306
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=snipeit
+      - MYSQL_USER=snipeit
 
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_KEY=${APP_KEY}
+      - APP_URL=${VIRTUAL_HOST}
+      - APP_TIMEZONE=UTC
+      - APP_LOCALE=en
   db:
     container_name: db
     image: mysql:latest
@@ -21,6 +39,7 @@ services:
     # - 3306:3306
     network:
       - snipeit
+    command: --default-authentication-plugin=mysql_native_password
 
 volumes:
   mysql-data
