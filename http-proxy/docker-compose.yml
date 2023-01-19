@@ -15,7 +15,7 @@ services:
       com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
     networks:
       - default
-      - backend 
+      - proxy 
 
   letsencrypt-nginx-proxy-companion:
     image: nginxproxy/acme-companion
@@ -30,7 +30,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - acme:/etc/acme.sh
     networks:
-      - backend
+      - proxy
 
 volumes:
   nginx_proxy_vhost.d:
@@ -38,4 +38,4 @@ volumes:
   acme:
 
 networks:
-  backend:
+  proxy:

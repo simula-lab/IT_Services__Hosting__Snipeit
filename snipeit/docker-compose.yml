@@ -10,6 +10,7 @@ services:
       - redis
     network:
       - snipeit
+      - proxy
 
   db:
     container_name: db
@@ -28,7 +29,7 @@ volumes:
 networks:
   snipeit:
 # Added to networks to allow for communicaiton between http-proxy and 
-  backend:
+  proxy:
     external: true
-    name: http_proxy_backend
+    name: http_proxy_proxy
 
