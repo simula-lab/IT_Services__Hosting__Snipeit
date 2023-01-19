@@ -21,6 +21,7 @@ services:
       - LETSENCRYPT_HOST=${VIRTUAL_HOST}
       - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
       - MYSQL_USER=snipit
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=snipit
       - MYSQL_PORT_3306_TCP_ADDR=db
       - MYSQL_PORT_3306_TCP_PORT=3306
@@ -34,13 +35,14 @@ services:
 
       - MAIL_PORT_587_TCP_ADDR=${SMTP_SERVER}
       - MAIL_PORT_587_TCP_PORT=${SMTP_PORT}
-      - MAIL_ENV_FROM_ADDR=${SNIPE_EMAIL}
-      - MAIL_ENV_FROM_NAME=${SNIPE_EMAIL_NAME}
+      - MAIL_ENV_FROM_ADDR=${SNIPEIT_EMAIL}
+      - MAIL_ENV_FROM_NAME=${SNIPEIT_EMAIL_NAME}
       - MAIL_ENV_ENCRYPTION=${SMTP_ENCRYPTION}
-      - MAIL_ENV_USERNAME=${SNIPE_EMAIL_USERNAME}
-      - MAIL_ENV_PASSWORD=${SNIPE_EMAIL_PASSWORD}
+      - MAIL_ENV_USERNAME=${SNIPEIT_EMAIL_USERNAME}
+      - MAIL_ENV_PASSWORD=${SNIPEIT_EMAIL_PASSWORD}
+
+       - PHP_UPLOAD_LIMIT=100
   db:
-    container_name: db
     image: mysql:latest
     volumes:
       - mysql-data:/var/lib/mysql
@@ -54,6 +56,7 @@ services:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=snipeit
       - MYSQL_USER=snipeit
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
 
 volumes:
   mysql-data:
@@ -64,5 +67,5 @@ networks:
 # Added to networks to allow for communicaiton between http-proxy and 
   proxy:
     external: true
-    name: http_proxy_proxy
+    name: http-proxy_proxy
 
