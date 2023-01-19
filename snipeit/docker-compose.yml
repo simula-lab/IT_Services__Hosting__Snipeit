@@ -56,8 +56,8 @@ services:
       - MYSQL_USER=snipeit
 
 volumes:
-  mysql-data
-  snipeit-data
+  mysql-data:
+  snipeit-data:
 
 networks:
   snipeit:
