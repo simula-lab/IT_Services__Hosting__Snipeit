@@ -1,8 +1,8 @@
 version: '3.8'
 
 services:
-  snileit:
-    image: snipe/snipe-it:latest
+  snipeit:
+    image: 'snipe/snipe-it:latest'
     # ports:
     # - 8000:80
     volumes:
@@ -13,18 +13,17 @@ services:
     networks:
       - snipeit
       - proxy
+    restart: unless-stopped
     depends_on:
       - db
-    environments:
+    environment:
       - VIRTUAL_HOST=${VIRTUAL_HOST}
       - LETSENCRYPT_HOST=${VIRTUAL_HOST}
       - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
-
+      - MYSQL_USER=snipit
+      - MYSQL_DATABASE=snipit
       - MYSQL_PORT_3306_TCP_ADDR=db
       - MYSQL_PORT_3306_TCP_PORT=3306
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=snipeit
-      - MYSQL_USER=snipeit
 
       - APP_ENV=production
       - APP_DEBUG=false
@@ -45,11 +44,16 @@ services:
     image: mysql:latest
     volumes:
       - mysql-data:/var/lib/mysql
+    restart: always
     # ports:
     # - 3306:3306
     networks:
       - snipeit
     command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=snipeit
+      - MYSQL_USER=snipeit
 
 volumes:
   mysql-data
