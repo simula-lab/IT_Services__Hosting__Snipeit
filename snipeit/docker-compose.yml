@@ -1,4 +1,5 @@
-version
+version: '3.8'
+
 services:
   snileit:
     image: snipe/snipe-it:latest
@@ -9,7 +10,7 @@ services:
         #links:
         #- snipedb:snipedb
         #- redis
-    network:
+    networks:
       - snipeit
       - proxy
     depends_on:
@@ -17,7 +18,8 @@ services:
     environments:
       - VIRTUAL_HOST=${VIRTUAL_HOST}
       - LETSENCRYPT_HOST=${VIRTUAL_HOST}
-      - LETSENCRYPT_EMAI=${LETSENCRYPT_EMAI}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+
       - MYSQL_PORT_3306_TCP_ADDR=db
       - MYSQL_PORT_3306_TCP_PORT=3306
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
@@ -30,6 +32,14 @@ services:
       - APP_URL=${VIRTUAL_HOST}
       - APP_TIMEZONE=UTC
       - APP_LOCALE=en
+
+      - MAIL_PORT_587_TCP_ADDR=${SMTP_SERVER}
+      - MAIL_PORT_587_TCP_PORT=${SMTP_PORT}
+      - MAIL_ENV_FROM_ADDR=${SNIPE_EMAIL}
+      - MAIL_ENV_FROM_NAME=${SNIPE_EMAIL_NAME}
+      - MAIL_ENV_ENCRYPTION=${SMTP_ENCRYPTION}
+      - MAIL_ENV_USERNAME=${SNIPE_EMAIL_USERNAME}
+      - MAIL_ENV_PASSWORD=${SNIPE_EMAIL_PASSWORD}
   db:
     container_name: db
     image: mysql:latest
@@ -37,7 +47,7 @@ services:
       - mysql-data:/var/lib/mysql
     # ports:
     # - 3306:3306
-    network:
+    networks:
       - snipeit
     command: --default-authentication-plugin=mysql_native_password
 
